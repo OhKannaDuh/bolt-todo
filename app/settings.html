@@ -1,0 +1,76 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="css/sakura.css">
+    <link rel="stylesheet" href="css/sakura-dark.css">
+    <link rel="stylesheet" href="css/settings.css">
+    <script src="js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="toolbar" style="height: auto">
+            <h2>Settings</h2>
+        </div>
+
+        <div class="settings">
+            <div class="note">
+                <p>Why has this opened in a seperate window?</p>
+                <p>Due to current limitations with bolt, keyboard is not captured by embedded windows.</p>
+            </div>
+
+            <div>
+                <h2>Daily Tasks</h2>
+                <ul>
+                    <li v-for="(task, index) in tasks.daily" :key="index" class="task">
+                        <span>{{task.task}} </span>
+                        <div class="spacer"></div>
+                        <button @click="remove('daily', index)">Delete</button>
+                    </li>
+                </ul>
+                <p v-if="!tasks.daily.length">No daily tasks set</p>
+                <div>
+                    <input v-model="input.daily" placeholder="Add new daily task" v-on:keyup.enter="add('daily')" />
+                    <button @click="add('daily')">Add</button>
+                </div>
+            </div>
+
+            <div>
+                <h2>Weekly Tasks</h2>
+                <ul>
+                    <li v-for="(task, index) in tasks.weekly" :key="index" class="task">
+                        <span>{{task.task}} </span>
+                        <div class="spacer"></div>
+                        <button @click="remove('weekly', index)">Delete</button>
+                    </li>
+                </ul>
+                <p v-if="!tasks.weekly.length">No weekly tasks set</p>
+                <div>
+                    <input v-model="input.weekly" placeholder="Add new weekly task" v-on:keyup.enter="add('daily')" />
+                    <button @click="add('weekly')">Add</button>
+                </div>
+            </div>
+
+            <div>
+                <h2>Monthly Tasks</h2>
+                <ul>
+                    <li v-for="(task, index) in tasks.monthly" :key="index" class="task">
+                        <span>{{task.task}} </span>
+                        <div class="spacer"></div>
+                        <button @click="remove('monthly', index)">Delete</button>
+                    </li>
+                </ul>
+                <p v-if="!tasks.monthly.length">No monthly tasks set</p>
+                <div>
+                    <input v-model="input.monthly" placeholder="Add new monthly task" v-on:keyup.enter="add('daily')" />
+                    <button @click="add('monthly')">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/BoltBrowser.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+
+</html>

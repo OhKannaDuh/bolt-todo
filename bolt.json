@@ -1,0 +1,5 @@
+{
+  "main": "app.lua",
+  "name": "Todo Checklist",
+  "description": "A daily, weekly and monthly checklist"
+}
