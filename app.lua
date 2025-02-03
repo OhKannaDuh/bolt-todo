@@ -1,5 +1,7 @@
 require('sloth.plugin')
 
+require('sloth.time_module')
+
 local plugin = Plugin()
 
 plugin.bolt.checkversion(1, 0)
@@ -16,6 +18,7 @@ plugin:load_config({
     }
 })
 
+-- Setup main window and settings
 local app = EmbeddedBrowser(plugin, {
     x = plugin.config.data.window.app.x,
     y = plugin.config.data.window.app.y,
@@ -41,7 +44,6 @@ app:onmessage('ready', function()
 end)
 
 app:onmessage('tasks', function(data)
-    print(dump(app.browser))
     plugin.config.data.tasks = data
     plugin:save_config()
 end)
@@ -54,30 +56,46 @@ settings:onmessage('ready', function()
     settings:message('config', plugin.config.data)
 end)
 
-function dump(o)
-    if type(o) == 'table' then
-        local s = '{ '
-        for k, v in pairs(o) do
-            if type(k) ~= 'number' then
-                k = '"' .. k .. '"'
-            end
-            s = s .. '[' .. k .. '] = ' .. dump(v) .. ','
-        end
-        return s .. '} '
-    else
-        return tostring(o)
-    end
-end
-
-print(dump(plugin.config.data))
-
 settings:onmessage('update', function(data)
     plugin.config.data.tasks = data
-    print('Sending tasks...')
     app:message('tasks', plugin.config.data.tasks)
     plugin:save_config()
 end)
 
+-- Add time module
+local time = TimeModule(plugin)
+time:add_on_minute_changed_callback(function(plugin)
+    plugin:save_config()
+end)
+
+time:add_on_day_changed_callback(function(plugin)
+    for _, task in pairs(plugin.config.data.tasks.daily) do
+        task.complete = false
+    end
+
+    app:message('tasks', plugin.config.data.tasks)
+    plugin:save_config()
+end)
+
+time:add_on_weekly_reset_day_callback(function(plugin)
+    for _, task in pairs(plugin.config.data.tasks.weekly) do
+        task.complete = false
+    end
+
+    app:message('tasks', plugin.config.data.tasks)
+    plugin:save_config()
+end)
+
+time:add_on_month_changed_callback(function(plugin)
+    for _, task in pairs(plugin.config.data.tasks.monthly) do
+        task.complete = false
+    end
+
+    app:message('tasks', plugin.config.data.tasks)
+    plugin:save_config()
+end)
+
+plugin:add_module(time)
+
 plugin:start()
 app:open()
--- settings:open()
