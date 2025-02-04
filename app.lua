@@ -1,6 +1,5 @@
-require('sloth.plugin')
-
-require('sloth.time_module')
+require('sloth.library')
+require('sloth.modules.time')
 
 local plugin = Plugin()
 
@@ -63,7 +62,7 @@ settings:onmessage('update', function(data)
 end)
 
 -- Add time module
-local time = TimeModule(plugin)
+local time = Time(plugin)
 time:add_on_minute_changed_callback(function(plugin)
     plugin:save_config()
 end)

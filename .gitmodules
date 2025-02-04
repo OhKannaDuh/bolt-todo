@@ -1,0 +1,3 @@
+[submodule "sloth"]
+	path = sloth
+	url = git@github.com:ohkannaduh/sloth.git
