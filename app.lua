@@ -35,6 +35,7 @@ local settings = Browser(plugin, {
 })
 
 app:onmessage('close', function()
+    plugin:save_config()
     plugin.bolt.close()
 end)
 
@@ -95,6 +96,21 @@ time:add_on_month_changed_callback(function(plugin)
 end)
 
 plugin:add_module(time)
+
+plugin:add_callback('save', function(plugin)
+    if app == nil or app:is(EmbeddedBrowser) == false then
+        return
+    end
+
+    local x, y, w, h = app.browser:xywh()
+    plugin.config.data.window.app = {
+        x = x,
+        y = y,
+        width = w,
+        height = h,
+        showdevtools = plugin.config.data.window.app.showdevtools
+    }
+end)
 
 plugin:start()
 app:open()
