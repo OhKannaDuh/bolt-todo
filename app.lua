@@ -24,31 +24,31 @@ local app = EmbeddedBrowser(plugin, {
     width = plugin.config.data.window.app.width,
     height = plugin.config.data.window.app.height,
     showdevtools = plugin.config.data.window.app.showdevtools,
-    path = "plugin://app/app.html"
+    scale = plugin.config.data.window.app.scale,
+    path = "plugin://app/dist/index.html"
 })
 
-app:add_setup(function(app)
-    app.browser:onreposition(function(event)
-        local x, y, w, h = event:xywh()
-        plugin.config.data.window.app.x = x
-        plugin.config.data.window.app.y = y
-        plugin.config.data.window.app.width = w
-        plugin.config.data.window.app.height = h
-        plugin:save_config()
-    end)
+app:add_callback('reposition', function(event)
+    local x, y, w, h = event:xywh()
+    plugin.config.data.window.app.x = x
+    plugin.config.data.window.app.y = y
+    plugin.config.data.window.app.width = w
+    plugin.config.data.window.app.height = h
+    plugin:save_config()
+end)
+
+app:add_callback('after_close', function(event)
+    plugin:save_config()
+    plugin.bolt.close()
 end)
 
 local settings = Browser(plugin, {
     width = plugin.config.data.window.settings.width,
     height = plugin.config.data.window.settings.height,
     showdevtools = plugin.config.data.window.settings.showdevtools,
-    path = "file://app/settings.html"
+    scale = plugin.config.data.window.settings.scale,
+    path = "plugin://app/dist/settings.html"
 })
-
-app:onmessage('close', function()
-    plugin:save_config()
-    plugin.bolt.close()
-end)
 
 app:onmessage('ready', function()
     app:message('config', plugin.config.data)
@@ -70,6 +70,12 @@ end)
 settings:onmessage('update', function(data)
     plugin.config.data.tasks = data
     app:message('tasks', plugin.config.data.tasks)
+    plugin:save_config()
+end)
+
+settings:onmessage('update-scale', function(data)
+    plugin.config.data.window.app.scale = data.scale
+    app:message('config', plugin.config.data)
     plugin:save_config()
 end)
 

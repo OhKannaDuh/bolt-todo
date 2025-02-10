@@ -1,0 +1,14 @@
+body {
+  padding: 0;
+  overflow: hidden;
+  max-width: none;
+  background: transparent;
+  color: #aed0e0;
+  margin: 0;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
