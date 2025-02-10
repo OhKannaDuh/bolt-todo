@@ -24,7 +24,7 @@ local app = EmbeddedBrowser(plugin, {
     width = plugin.config.data.window.app.width,
     height = plugin.config.data.window.app.height,
     showdevtools = plugin.config.data.window.app.showdevtools,
-    path = "file://app/app.html"
+    path = "plugin://app/app.html"
 })
 
 app:add_setup(function(app)
