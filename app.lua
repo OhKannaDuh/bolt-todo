@@ -27,6 +27,17 @@ local app = EmbeddedBrowser(plugin, {
     path = "file://app/app.html"
 })
 
+app:add_setup(function(app)
+    app.browser:onreposition(function(event)
+        local x, y, w, h = event:xywh()
+        plugin.config.data.window.app.x = x
+        plugin.config.data.window.app.y = y
+        plugin.config.data.window.app.width = w
+        plugin.config.data.window.app.height = h
+        plugin:save_config()
+    end)
+end)
+
 local settings = Browser(plugin, {
     width = plugin.config.data.window.settings.width,
     height = plugin.config.data.window.settings.height,
@@ -96,21 +107,6 @@ time:add_on_month_changed_callback(function(plugin)
 end)
 
 plugin:add_module(time)
-
-plugin:add_callback('save', function(plugin)
-    if app == nil or app:is(EmbeddedBrowser) == false then
-        return
-    end
-
-    local x, y, w, h = app.browser:xywh()
-    plugin.config.data.window.app = {
-        x = x,
-        y = y,
-        width = w,
-        height = h,
-        showdevtools = plugin.config.data.window.app.showdevtools
-    }
-end)
 
 plugin:start()
 app:open()
