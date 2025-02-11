@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import BoltBrowser from "koala/BoltBrowser.ts";
+import BoltBrowser from "koala/BoltBrowser";
 
 const props = defineProps<{
   plugin: BoltBrowser;
 }>();
 
 import { ref } from "vue";
-import type { Ref } from "vue";
 
 type Task = {
   task: string;
@@ -100,11 +99,10 @@ props.plugin.onmessage("config", function (data) {
         >
       </button>
     </div>
-
     <div
       v-for="tab in tabs"
       :key="tab.key"
-      class="tabcontent"
+      class="scroll-area rune-scroll"
       :class="{ hidden: !tab.show }"
     >
       <ul>
@@ -144,6 +142,7 @@ props.plugin.onmessage("config", function (data) {
 <style scoped>
 @import "rune-ui/content.css";
 @import "rune-ui/button.css";
+@import "rune-ui/scroll.css";
 
 .tabs {
   width: 100%;
@@ -152,6 +151,10 @@ props.plugin.onmessage("config", function (data) {
 
 .tablinks {
   width: 100%;
+}
+
+.scroll-area {
+  overflow-y: scroll;
 }
 
 .task {
@@ -172,6 +175,7 @@ ul {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  max-height: calc(100vh - 12px);
 }
 
 .button {
