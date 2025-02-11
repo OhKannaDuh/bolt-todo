@@ -1,7 +1,7 @@
 require('sloth.library')
 require('sloth.modules.time')
 
-local plugin = Plugin()
+local plugin = Plugin("Todo")
 
 plugin.bolt.checkversion(1, 0)
 
